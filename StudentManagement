@@ -1,0 +1,115 @@
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
+
+class StudentManagement {
+    private ArrayList<Student> studentList = new ArrayList();
+    private Scanner scanner;
+
+    public StudentManagement() {
+        this.scanner = new Scanner(System.in);
+    }
+
+    public void enterStudentList() {
+        System.out.println("Enter student list:");
+
+        while(true) {
+            System.out.print("Enter student's first name : ");
+            String firstName = this.scanner.nextLine();
+            if (firstName.equalsIgnoreCase("end")) {
+                return;
+            }
+
+            System.out.print("Enter student's last name: ");
+            String lastName = this.scanner.nextLine();
+            this.studentList.add(new Student(firstName, lastName));
+        }
+    }
+
+    public void findStudentsByLastName(String lastName) {
+        System.out.println("Students with last name '" + lastName + "':");
+        boolean found = false;
+        Iterator var3 = this.studentList.iterator();
+
+        while(var3.hasNext()) {
+            Student student = (Student)var3.next();
+            if (student.getLastName().equalsIgnoreCase(lastName)) {
+                PrintStream var10000 = System.out;
+                String var10001 = student.getFirstName();
+                var10000.println(var10001 + " " + student.getLastName());
+                found = true;
+            }
+        }
+
+        if (!found) {
+            System.out.println("No students found with last name '" + lastName + "'.");
+        }
+
+    }
+
+    public void findAndEditStudentsByFullName(String fullName) {
+        System.out.println("Searching for student with full name '" + fullName + "':");
+        Iterator var2 = this.studentList.iterator();
+
+        Student student;
+        do {
+            if (!var2.hasNext()) {
+                System.out.println("No student found with full name '" + fullName + "'.");
+                return;
+            }
+
+            student = (Student)var2.next();
+        } while(!(student.getFirstName() + " " + student.getLastName()).equalsIgnoreCase(fullName));
+
+        PrintStream var10000 = System.out;
+        String var10001 = student.getFirstName();
+        var10000.println("Student found: " + var10001 + " " + student.getLastName());
+        System.out.print("Enter new first name: ");
+        String newFirstName = this.scanner.nextLine();
+        System.out.print("Enter new last name: ");
+        String newLastName = this.scanner.nextLine();
+        student.setFirstName(newFirstName);
+        student.setLastName(newLastName);
+        System.out.println("Student information updated successfully.");
+    }
+
+    public static void main(String[] args) {
+        StudentManagement studentManagement = new StudentManagement();
+        Scanner scanner = new Scanner(System.in);
+
+        int choice;
+        do {
+            System.out.println("\nStudent Management System");
+            System.out.println("1. Enter student list");
+            System.out.println("2. Find students by last name");
+            System.out.println("3. Find and edit students by full name");
+            System.out.println("4. End");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+                    studentManagement.enterStudentList();
+                    break;
+                case 2:
+                    System.out.print("Enter last name to search: ");
+                    String lastName = scanner.nextLine();
+                    studentManagement.findStudentsByLastName(lastName);
+                    break;
+                case 3:
+                    System.out.print("Enter full name to search: ");
+                    String fullName = scanner.nextLine();
+                    studentManagement.findAndEditStudentsByFullName(fullName);
+                    break;
+                case 4:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 1 and 4.");
+            }
+        } while(choice != 4);
+
+        scanner.close();
+    }
+}
